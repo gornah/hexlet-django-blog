@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Articles</title>
-</head>
-<body>
-    <h1>Articles</h1>
-    <p>Welcome to the articles page!</p>
-    <p>Application name: <strong>{{ app_name }}</strong></p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Список статей</h1>
+    {% for article in articles %}
+        <a href='{% url "article_detail" article.id %}'><h2>{{ article.name }}</h2></a>
+        <div>{{ article.body|slice:":200" }}</div>
+    {% endfor %}
+{% endblock %}
