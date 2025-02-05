@@ -2,8 +2,10 @@
 # from django.http import HttpResponse
 # Create your views here.
 from django.views import View
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from hexlet_django_blog.article.models import Article
+from .forms import ArticleForm
 
 # def index(request):
 #  return render(request, 'articles/index.html', context={
@@ -30,8 +32,17 @@ class ArticleView(View):
         })
 
 
-# class ArticleCommentsView(View):
+class ArticleFormCreateView(View):
 
-#     def get(self, request, *args, **kwargs):
-#         comment = get_object_or_404(Comment, id=kwargs['id'], article_id=kwargs['article_id'])
-#         return render(request, ...)
+    def get(self, request, *args, **kwargs):
+        form = ArticleForm()
+        return render(request, 'articles/create.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Статья успешно создана!')
+            return redirect('articles_index')
+        messages.error(request, 'Ошибка в заполнении формы!')
+        return render(request, 'articles/create.html', {'form': form})
